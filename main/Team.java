@@ -1,3 +1,5 @@
+package main;
+
 public class Team {
     /* General */
     private int teamID;
