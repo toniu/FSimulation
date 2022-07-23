@@ -4,39 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-/**
- * Processes of a match (For 90 minutes plus stoppage time):
- * 
- * 1. Will some action happen in this minute?
- * -- (Yes, go step 2, No, next minute go step 1)
- * 
- * 2. Home or Away team will gain possession (battle of the midfields)
- * 
- * 3. Will the team, that gains possession, be able to develop it into a chance?
- * -- (OUTCOME: No, go 3a; Yes go 3b)
- * = 3a. Possession lost, next minute, back to step 1,
- * = 3b. Posession develops into a chance
- * 
- * 4. Chance is created from team, will it lead to goal, posession lost or a set-piece?
- * -- (Battle of the attack vs. opponent's defence)
- * -- (OUTCOME: GOAL, go 4a; Possession LOST, go 4b; Set-piece OCCURS, go 4c)
- * = 4a. Chance converted from team, go to step 5,
- * = 4b. Posession is lost from team, back to step 1,
- * = 4c. Chance leads to a set-piece for team (team receives a corner, free-kick or penalty)
- * Which set-piece will the team receive?
- * -- (OUTCOME: corner, go 4ci; free-kick go 4cii; penalty go 4ciii)
- * == 4ci. Team has a corner, will they score from this corner?
- * -- (OUTCOME: Yes, go step 5; No, next minute back to step 1)
- * == 4cii. Team has a free-kick, will they score from this free-kick?
- * -- (OUTCOME: Yes, go step 5; No, next minute back to step 1)
- * == 4ciii. Team has a penalty, will they score from this penalty?
- * -- (OUTCOME: Yes, go step 5; No, next minute back to step 1)
- * 
- * 5. Team has SCORED, update scoreboard, go next minute and back to step 1!
- */
-
 public class Match {
     /* Match states */
+    String matchState = "";
     boolean quickRun = false;
     boolean isPlaying = true;
 
@@ -263,6 +233,169 @@ public class Match {
         }
     }
 
+    public String createBuildup(String side) {
+        /* Home team trying to build up an attack... */
+        if (side.equals("H")) {
+            int hLimit = (int) Math.floor(((homeMidfield + homeOVR) / (homeMidfield + awayMidfield + homeOVR + awayOVR)) * 100);
+
+            int hPb = RNG.nextInt(100) + 1;
+            if (hPb <= hLimit * 0.95) {
+                return "HChanceCreated";
+            } else {
+                return "noPos";
+            }
+        } else {
+            /* Away team trying to build up an attack... */
+            int aLimit = (int) Math.floor(((awayMidfield + awayOVR) / (homeMidfield + awayMidfield + homeOVR + awayOVR)) * 100);
+
+            int aPb = RNG.nextInt(100) + 1;
+            if (aPb <= aLimit * 0.95) {
+                return "AChanceCreated";
+            } else {
+                return "noPos";
+            }
+        }
+    }
+
+    public String gainPossession() {
+        /* Home midfield better than aray midfield */
+        if (homeMidfield >= awayMidfield) {
+            int hLimit = (int) Math.floor(((homeMidfield) / (homeMidfield + awayMidfield)) * 100);
+
+            int hPG = RNG.nextInt(100) + 1;
+            if (hPG <= hLimit * 0.85) {
+                return "hPos";
+            } else if (hPG >= hLimit * 1.15) {
+                return "aPos";
+            } else {
+                return "noPos";
+            }
+        } else {
+            int aLimit = (int) Math.floor(((awayMidfield) / (homeMidfield + awayMidfield)) * 100);
+
+            int aPG = RNG.nextInt(100) + 1;
+            if (aPG <= aLimit * 0.85) {
+                return "aPos";
+            } else if (aPG >= aLimit * 1.15) {
+                return "hPos";
+            } else {
+                return "noPos";
+            }
+        }
+    }
+
+    public void addScore(String side) {
+        if (side.equals("H")) {
+            /* Update home team score and table points */
+            HScore++;
+
+            homeTeam.setGF(homeTeam.getGF() + 1);
+            homeTeam.setGD(homeTeam.getGD() + 1);
+
+            awayTeam.setGA(awayTeam.getGA() + 1);
+            awayTeam.setGD(awayTeam.getGF() - awayTeam.getGA());
+
+        } else {
+            /* Update away team score and table points */
+            AScore++;
+
+            awayTeam.setGF(awayTeam.getGF() + 1);
+            awayTeam.setGD(awayTeam.getGD() + 1);
+
+            homeTeam.setGA(homeTeam.getGA() + 1);
+            homeTeam.setGD(homeTeam.getGF() - homeTeam.getGA());
+        }
+    }
+
+    public void matchProgress() {
+        if (matchState.equals("Home Chance")) {
+            /* New chance for home team */
+            HAttempts++;
+
+            String HOutcome = createChance("H");
+            matchState = HOutcome;
+            if (HOutcome.equals("HGoal")) {
+                /* Home chance scored */
+                addScore("H");
+            } else if (HOutcome.equals("HFreekick") ||
+            HOutcome.equals("HCorner") ||
+            HOutcome.equals("HPenalty")) {
+                /* Home chance leads to set-piece */
+                clock++;
+                String spOutcome = createSetPiece("H", matchState);
+				matchState = spOutcome;
+                
+                if (spOutcome.equals("HGoal")) {
+                    /* Home scores from set-piece */
+                    addScore("H");
+                } else {
+                    /* Miss set-piece */
+                }
+            } else {
+                /* Home chance failed */
+                matchState = "HChance Missed";
+            }
+        } else if (matchState.equals("Away Chance")) {
+            /* New chance for away team */
+            AAttempts++;
+
+            String AOutcome = createChance("A");
+            matchState = AOutcome;
+            if (AOutcome.equals("AGoal")) {
+                /* Away chance scored */
+                addScore("A");
+            } else if (AOutcome.equals("AFreekick") ||
+            AOutcome.equals("ACorner") ||
+            AOutcome.equals("APenalty")) {
+                /* Away chance leads to set-piece */
+                clock++;
+                String spOutcome = createSetPiece("A", matchState);
+				matchState = spOutcome;
+                
+                if (spOutcome.equals("HGoal")) {
+                    /* Away scores from set-piece */
+                    addScore("A");
+                } else {
+                    /* Miss set-piece */
+                }
+            } else {
+                /* Away chance failed */
+                matchState = "AChance Missed";
+            }
+        }
+
+
+        if (beginAction()) {
+            if (gainPossession().equals("hPos")) {
+                /* Home team gained posession */
+                clock++;
+                matchState = "Home Posession";
+
+                /* Home team able to build up an attack with possession */
+                if (createBuildup("H").equals("HChanceCreated")) {
+                    matchState = "Home Chance";
+                    HAttempts++;
+                }
+            } else if (gainPossession().equals("aPos")) {
+                /* Away team gained posession */
+                clock++;
+                matchState = "Away Posession";
+
+                /* Away team able to build up an attack with possession */
+                if (createBuildup("A").equals("AChanceCreated")) {
+                    matchState = "Away Chance";
+                    AAttempts++;
+                }
+            } else {
+                /* No action occuring at this minute */
+                matchState = "No action";
+            }
+        } else {
+            /* No action occuring at this minute */
+            matchState = "No action";
+        } 
+    }
+
 
 
     public void startGame(boolean isQuickRun, Team homeT, Team awayT) {
@@ -271,8 +404,6 @@ public class Match {
         this.clearEvents();
         isPlaying = true;
         this.resetScore();
-
-        String matchState = "";
 
         /*-- Team Variables --*/
         homeTeam = homeT;
@@ -348,5 +479,29 @@ public class Match {
         }
 
         clock = 0;
+
+        matchState = "Kick Off";
+        int fhST = RNG.nextInt(3);
+        
+        /* Begin first half */
+        while (clock < (45 + fhST)) {
+            clock++;
+            matchProgress();
+        };
+
+        /* Begin second half */
+        clock = 45;
+        matchState = "Half time";
+        int shST = RNG.nextInt(6);
+        
+        while (clock < (90 + shST)) {
+            matchProgress();
+        }
+
+        /* End of second half */
+        clock = 90;
+        half = 3;
+        matchState = "FT";
+        /* Code for extra time will come later... */
     }
 }
