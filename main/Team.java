@@ -35,7 +35,8 @@ public class Team {
         this.attack = newAtt;
         this.midfield = newMid;
         this.defence = newDef;
-        this.OVR = (int) Math.floor((newAtt + newMid + newDef) / 3);
+        this.OVR = (int) Math.floor(((double) (newAtt + newMid + newDef)) / 3.0);
+        System.out.println("OVR: " + this.OVR);
 
         /* Initialise league statistics */
         this.resetStats();

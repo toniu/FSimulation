@@ -26,18 +26,27 @@ public class Match {
     Team homeTeam = null;
     Team awayTeam = null;
 
-    int homeAttack = 0;
-    int homeMidfield = 0;
-    int homeDefence = 0;
-    int homeOVR = 0;
+    double homeAttack = 0;
+    double homeMidfield = 0;
+    double homeDefence = 0;
+    double homeOVR = 0;
 
-    int awayAttack = 0;
-    int awayMidfield = 0;
-    int awayDefence = 0;
-    int awayOVR = 0;
+    double awayAttack = 0;
+    double awayMidfield = 0;
+    double awayDefence = 0;
+    double awayOVR = 0;
 
     int HAttempts = 0;
     int AAttempts = 0;
+
+    public Match(boolean isQuickRun, Team hT, Team aT) {
+        startGame(isQuickRun, hT, aT);
+    }
+
+    /* Printing messages */
+    public void print(String msg) {
+        System.out.println(msg);
+    }
 
     /* Is the match currently playing? */
     public boolean isMatchPlaying() {
@@ -55,6 +64,13 @@ public class Match {
         this.AScore = 0;
     }
 
+    /* Increment clock */
+    public void incrementClock() {
+        if (clock == 45) {
+            clock++;
+        }
+    }
+
     /* New Event */
     public void newEvent(int minsPassed, String gameState, boolean showClock, int half) {
         String clockMsg = minsPassed + "'";
@@ -62,35 +78,55 @@ public class Match {
 
         /* Present stoppage time on clock */
         if (minsPassed > 45 && half == 1) {
-            clockMsg = minsPassed + "+" + (minsPassed - 45);
+            clockMsg = 45 + "+" + (minsPassed - 45);
         } else if (minsPassed > 90 && half == 2) {
-            clockMsg = minsPassed + "+" + (minsPassed - 90);
+            clockMsg = 90 + "+" + (minsPassed - 90);
         } else if (minsPassed > 105 && half == 3) {
-            clockMsg = minsPassed + "+" + (minsPassed - 105);
+            clockMsg = 105 + "+" + (minsPassed - 105);
         } else if (minsPassed > 120 && half == 4) {
-            clockMsg = minsPassed + "+" + (minsPassed - 120);
+            clockMsg = 120 + "+" + (minsPassed - 120);
         }
 
         /* Create a new event */
         /*-- Home team scored --*/
         if (gameState.equals("HGoal")) {
             /*  */
+            event = clockMsg + ": GOAL for " + homeTeam.getAbbreviation();
             /*-- Away team scored --*/
         } else if (gameState.equals("AGoal")) {
             /*  */
+            event = clockMsg + ": GOAL for " + awayTeam.getAbbreviation();
             /*-- Start / End of half */
         } else if (gameState.equals("HT") ||
                 gameState.equals("FT") ||
                 gameState.equals("Kickoff")) {
             /*  */
+            if (half == 1) {
+                event = "======== KICK-OFF --";
+            } else if (half == 2) {
+                event = "======== HALF-TIME: " + homeTeam.getAbbreviation() +
+                 " " + HScore + " - " +
+                AScore + " " + awayTeam.getAbbreviation() + " -- ";
+            } else if (half == 3) {
+                event = "======== FULL-TIME: " + homeTeam.getAbbreviation() +
+                 " " + HScore + " - " +
+                AScore + " " + awayTeam.getAbbreviation() + " -- ";
+            } else if (half == 4) {
+                event = "======== EXTRA-TIME HALF TIME: " + homeTeam.getAbbreviation() +
+                 " " + HScore + " - " +
+                AScore + " " + awayTeam.getAbbreviation() + " -- ";
+            }
             /*-- Resumed match --*/
         } else {
-            /* */
+            event = clockMsg + ": " + gameState;
         }
+
+        events.add(event);
+        print(event);
     }
 
     /* Clamps the value to be within specified number range */
-    public int clampV(int value, int min, int max) {
+    public double clampV(double value, double min, double max) {
         if (value < min) {
             return min;
         } else if (value > max) {
@@ -129,13 +165,13 @@ public class Match {
 				int heC = RNG.nextInt(100) + 1;
 				if (heC <= 40) {
                     /* Home team has free-kick... */
-					return "HFreekick";
+					return "Home Freekick";
                 } else if (heC > 40 && heC <= 80) {
                     /* Home team has a corner... */
-					return "HCorner";
+					return "Home Corner";
                 } else
                     /* Home team has a penalty... */
-					return "HPenalty";
+					return "Home Penalty";
             }
         } else {
             /* Away team has a chance... */
@@ -153,13 +189,13 @@ public class Match {
 				int aeC = RNG.nextInt(100) + 1;
 				if (aeC <= 40) {
                     /* Away team has free-kick... */
-					return "AFreekick";
+					return "Away Freekick";
                 } else if (aeC > 40 && aeC <= 80) {
                     /* Away team has a corner... */
-					return "ACorner";
+					return "Away Corner";
                 } else
                     /* Away team has a penalty... */
-					return "APenalty";
+					return "Away Penalty";
             }
         }
     }
@@ -184,19 +220,19 @@ public class Match {
         /* Home-team is doing a set-piece */
         if (side.equals("H")) {
             goal = "HGoal";
-            corner = "HCorner";
-            cornerfailed = "HCornerFailed";
-            freekick = "HFreekick";
-            freekickfailed = "HFreekickMiss";
-            penaltymiss = "HPenaltyMiss";
+            corner = "Home Corner";
+            cornerfailed = "Home Corner Failed";
+            freekick = "Home Freekick";
+            freekickfailed = "Home Freekick Miss";
+            penaltymiss = "Home Penalty Miss";
         } else {
             /* Away-team is doing a set-piece */
             goal = "AGoal";
-            corner = "ACorner";
-            cornerfailed = "ACornerFailed";
-            freekick = "AFreekick";
-            freekickfailed = "AFreekickMiss";
-            penaltymiss = "APenaltyMiss";
+            corner = "Away Corner";
+            cornerfailed = "Away Corner Failed";
+            freekick = "Away Freekick";
+            freekickfailed = "Away Freekick Miss";
+            penaltymiss = "Away Penalty Miss";
         }
 
         /* Team is doing a set-piece... */
@@ -258,10 +294,9 @@ public class Match {
     }
 
     public String gainPossession() {
-        /* Home midfield better than aray midfield */
+        /* Home midfield better than away midfield */
         if (homeMidfield >= awayMidfield) {
             int hLimit = (int) Math.floor(((homeMidfield) / (homeMidfield + awayMidfield)) * 100);
-
             int hPG = RNG.nextInt(100) + 1;
             if (hPG <= hLimit * 0.85) {
                 return "hPos";
@@ -271,8 +306,8 @@ public class Match {
                 return "noPos";
             }
         } else {
+            /* Away midfield is better than home midfield */
             int aLimit = (int) Math.floor(((awayMidfield) / (homeMidfield + awayMidfield)) * 100);
-
             int aPG = RNG.nextInt(100) + 1;
             if (aPG <= aLimit * 0.85) {
                 return "aPos";
@@ -312,55 +347,97 @@ public class Match {
             /* New chance for home team */
             HAttempts++;
 
+            if (!quickRun) {
+                newEvent(clock, matchState, false, half);
+            }
+
             String HOutcome = createChance("H");
             matchState = HOutcome;
             if (HOutcome.equals("HGoal")) {
                 /* Home chance scored */
+                if (!quickRun) {
+                    newEvent(clock, matchState, true, half);
+                }
                 addScore("H");
-            } else if (HOutcome.equals("HFreekick") ||
-            HOutcome.equals("HCorner") ||
-            HOutcome.equals("HPenalty")) {
+            } else if (HOutcome.equals("Home Freekick") ||
+            HOutcome.equals("Home Corner") ||
+            HOutcome.equals("Home Penalty")) {
                 /* Home chance leads to set-piece */
+                HAttempts++;
                 clock++;
+                if (!quickRun) {
+                    newEvent(clock, matchState, false, half);
+                }
+
                 String spOutcome = createSetPiece("H", matchState);
 				matchState = spOutcome;
                 
                 if (spOutcome.equals("HGoal")) {
                     /* Home scores from set-piece */
+                    if (!quickRun) {
+                        newEvent(clock, matchState, true, half);
+                    }
                     addScore("H");
                 } else {
                     /* Miss set-piece */
+                    if (!quickRun) {
+                        newEvent(clock, matchState, true, half);
+                    }
                 }
             } else {
                 /* Home chance failed */
-                matchState = "HChance Missed";
+                matchState = "Home Chance Missed";
+                if (!quickRun) {
+                    newEvent(clock, matchState, true, half);
+                }
             }
         } else if (matchState.equals("Away Chance")) {
             /* New chance for away team */
             AAttempts++;
+            if (!quickRun) {
+                newEvent(clock, matchState, false, half);
+            }
 
             String AOutcome = createChance("A");
             matchState = AOutcome;
             if (AOutcome.equals("AGoal")) {
                 /* Away chance scored */
+                if (!quickRun) {
+                    newEvent(clock, matchState, true, half);
+                }
                 addScore("A");
-            } else if (AOutcome.equals("AFreekick") ||
-            AOutcome.equals("ACorner") ||
-            AOutcome.equals("APenalty")) {
+            } else if (AOutcome.equals("Away Freekick") ||
+            AOutcome.equals("Away Corner") ||
+            AOutcome.equals("Away Penalty")) {
                 /* Away chance leads to set-piece */
+                AAttempts++;
                 clock++;
+
+                if (!quickRun) {
+                    newEvent(clock, matchState, false, half);
+                }
+
                 String spOutcome = createSetPiece("A", matchState);
 				matchState = spOutcome;
                 
-                if (spOutcome.equals("HGoal")) {
+                if (spOutcome.equals("AGoal")) {
                     /* Away scores from set-piece */
+                    if (!quickRun) {
+                        newEvent(clock, matchState, true, half);
+                    }
                     addScore("A");
                 } else {
                     /* Miss set-piece */
+                    if (!quickRun) {
+                        newEvent(clock, matchState, true, half);
+                    }
                 }
             } else {
                 /* Away chance failed */
-                matchState = "AChance Missed";
+                matchState = "Away Chance Missed";
+                if (!quickRun) {
+                    newEvent(clock, matchState, true, half);
+                }
             }
         }
 
@@ -369,7 +446,10 @@ public class Match {
             if (gainPossession().equals("hPos")) {
                 /* Home team gained posession */
                 clock++;
-                matchState = "Home Posession";
+                matchState = "Home Possession";
+                if (!quickRun) {
+                    newEvent(clock, matchState, true, half);
+                }
 
                 /* Home team able to build up an attack with possession */
                 if (createBuildup("H").equals("HChanceCreated")) {
@@ -377,10 +457,13 @@ public class Match {
                     HAttempts++;
                 }
             } else if (gainPossession().equals("aPos")) {
-                /* Away team gained posession */
+                /* Away team gained possession */
                 clock++;
-                matchState = "Away Posession";
-
+                matchState = "Away Possession";
+                if (!quickRun) {
+                    newEvent(clock, matchState, true, half);
+                }
+            
                 /* Away team able to build up an attack with possession */
                 if (createBuildup("A").equals("AChanceCreated")) {
                     matchState = "Away Chance";
@@ -388,15 +471,13 @@ public class Match {
                 }
             } else {
                 /* No action occuring at this minute */
-                matchState = "No action";
+                matchState = " ";
             }
         } else {
             /* No action occuring at this minute */
-            matchState = "No action";
+            matchState = " ";
         } 
     }
-
-
 
     public void startGame(boolean isQuickRun, Team homeT, Team awayT) {
         /*  */
@@ -428,17 +509,17 @@ public class Match {
         if (homeOVR > awayOVR) {
             homeOVR = (int) Math.floor(homeOVR + (15 * (awayOVR / homeOVR)));
             /* Clamp home overall boost advantage */
-            this.clampV(homeOVR, 0, 95);
+            homeOVR = this.clampV(homeOVR, 0, 95);
 
             awayOVR = (int) Math.floor(awayOVR - (15 * (awayOVR / homeOVR)));
-            this.clampV(awayOVR, 0, 95);
+            awayOVR = this.clampV(awayOVR, 0, 95);
         } else if (awayOVR > homeOVR) {
             awayOVR = (int) Math.floor(homeOVR + (10 * (homeOVR / awayOVR)));
             /* Clamp away overall boost advantage */
-            this.clampV(homeOVR, 0, 95);
+            awayOVR = this.clampV(homeOVR, 0, 95);
 
             homeOVR = (int) Math.floor(homeOVR - (10 * (homeOVR / awayOVR)));
-            this.clampV(awayOVR, 0, 95);
+            homeOVR = this.clampV(awayOVR, 0, 95);
         }
 
         /*-- Attack vs. opponent defence comparisons 
@@ -449,17 +530,17 @@ public class Match {
         if (homeAttack > awayDefence) {
             /* Home attack advantage */
             homeAttack = (int) Math.floor(homeAttack + (15 * (awayDefence / homeAttack)));
-            this.clampV(homeAttack, 0, 95);
+            homeAttack = this.clampV(homeAttack, 0, 95);
 
             awayDefence = (int) Math.floor(awayDefence - (15 * (awayDefence / homeAttack)));
-            this.clampV(awayDefence, 0, 95);
+            awayDefence = this.clampV(awayDefence, 0, 95);
         } else if (awayDefence > homeAttack) {
             /* Away defence advantage */
             awayDefence = (int) Math.floor(awayDefence + (20 * (homeAttack / awayDefence)));
-            this.clampV(awayDefence, 0, 95);
+            awayDefence = this.clampV(awayDefence, 0, 95);
 
             homeAttack = (int) Math.floor(homeAttack - (10 * (homeAttack / awayDefence)));
-            this.clampV(homeAttack, 0, 95);
+            homeAttack = this.clampV(homeAttack, 0, 95);
         }
 
         if (awayAttack > homeDefence) {
@@ -468,19 +549,26 @@ public class Match {
             this.clampV(awayAttack, 0, 95);
 
             homeDefence = (int) Math.floor(homeDefence - (10 * (homeDefence / awayAttack)));
-            this.clampV(homeDefence, 0, 95);
+            homeDefence = this.clampV(homeDefence, 0, 95);
         } else if (homeDefence > awayAttack) {
             /* Home defence advantage */
             homeDefence = (int) Math.floor(homeDefence + (25 * (awayAttack / homeDefence)));
-            this.clampV(homeDefence, 0, 95);
+            homeDefence = this.clampV(homeDefence, 0, 95);
 
             awayAttack = (int) Math.floor(awayAttack - (15 * (awayAttack / homeDefence)));
-            this.clampV(awayAttack, 0, 95);
+            awayAttack = this.clampV(awayAttack, 0, 95);
         }
 
         clock = 0;
 
         matchState = "Kick Off";
+        print(homeTeam.getName() + " vs. " + awayTeam.getName());
+
+        /* Only print detailed match events if the match is not quick ran */
+        if (!quickRun) {
+            newEvent(clock, matchState, true, half);
+        }
+
         int fhST = RNG.nextInt(3);
         
         /* Begin first half */
@@ -491,10 +579,16 @@ public class Match {
 
         /* Begin second half */
         clock = 45;
-        matchState = "Half time";
+        half = 2;
+        matchState = "HT";
+        if (!quickRun) {
+            newEvent(clock, matchState, true, half);
+        }
         int shST = RNG.nextInt(6);
         
+        matchState = " ";
         while (clock < (90 + shST)) {
+            clock++;
             matchProgress();
         }
 
@@ -502,6 +596,17 @@ public class Match {
         clock = 90;
         half = 3;
         matchState = "FT";
+        if (!quickRun) {
+            newEvent(clock, matchState, true, half);
+            print("-- " + homeTeam.getAbbreviation() + " attempts: " + HAttempts);
+            print("-- " + awayTeam.getAbbreviation() + " attempts: " + AAttempts);
+        } else {
+            print("======== QUICK-RUN: " + homeTeam.getAbbreviation() +
+            " " + HScore + " - " +
+           AScore + " " + awayTeam.getAbbreviation() + " -- ");
+            print("-- " + homeTeam.getAbbreviation() + " attempts: " + HAttempts);
+            print("-- " + awayTeam.getAbbreviation() + " attempts: " + AAttempts);
+        }
         /* Code for extra time will come later... */
     }
 }
