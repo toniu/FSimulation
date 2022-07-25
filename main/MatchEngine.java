@@ -614,6 +614,9 @@ public class MatchEngine {
             print("-- " + homeTeam.getAbbreviation() + " attempts: " + HAttempts);
             print("-- " + awayTeam.getAbbreviation() + " attempts: " + AAttempts);
         }
+
+        /* Match complete; return the match results */
+
         /* Code for extra time will come later... */
     }
 }

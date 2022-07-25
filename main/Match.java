@@ -92,6 +92,14 @@ public class Match {
         return this.awayAttempts;
     }
 
+    public void setHomeTeam(Team hT) {
+        this.homeTeam = hT;
+    }
+
+    public void setAwayTeam(Team aT) {
+        this.awayTeam = aT;
+    }
+
     public void updateScores(int HS, int AS, int HA, int AA) {
         /* Only update score if the match has been played */
         this.played = true;
