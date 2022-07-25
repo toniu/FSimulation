@@ -1,6 +1,6 @@
 # FSimulation
 
-A Java simulation project which includes the simulation of leagues and matches between teams based on their FIFA ratings (attack, defence, midfield, and OVR rating).
+A Java football simulation project which includes the simulation of leagues and matches between teams based on their FIFA ratings (attack, defence, midfield, and OVR rating).
 
 # Menu
 a) Simulate friendly
@@ -22,18 +22,18 @@ team that creates a chance,
 whether the team is able to convert the chance.
 
 Processes of a match (For 90 minutes plus stoppage time):
- * 
- * 1. Will some action happen in this minute?
+ 
+ 1. Will some action happen in this minute?
  * -- (Yes, go step 2, No, next minute go step 1)
- * 
- * 2. Home or Away team will gain possession (battle of the midfields)
- * 
- * 3. Will the team, that gains possession, be able to develop it into a chance?
+
+ 2. Home or Away team will gain possession (battle of the midfields)
+
+ 3. Will the team, that gains possession, be able to develop it into a chance?
  * -- (OUTCOME: No, go 3a; Yes go 3b)
  * = 3a. Possession lost, next minute, back to step 1,
  * = 3b. Posession develops into a chance
- * 
- * 4. Chance is created from team, will it lead to goal, posession lost or a set-piece?
+
+ 4. Chance is created from team, will it lead to goal, posession lost or a set-piece?
  * -- (Battle of the attack vs. opponent's defence)
  * -- (OUTCOME: GOAL, go 4a; Possession LOST, go 4b; Set-piece OCCURS, go 4c)
  * = 4a. Chance converted from team, go to step 5,
@@ -47,8 +47,8 @@ Processes of a match (For 90 minutes plus stoppage time):
  * -- (OUTCOME: Yes, go step 5; No, next minute back to step 1)
  * == 4ciii. Team has a penalty, will they score from this penalty?
  * -- (OUTCOME: Yes, go step 5; No, next minute back to step 1)
- * 
- * 5. Team has SCORED, update scoreboard, go next minute and back to step 1!
+ 
+ 5. Team has SCORED, update scoreboard, go next minute and back to step 1!
 
  # Leagues
 
