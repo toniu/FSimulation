@@ -7,10 +7,12 @@ public class Main {
 
         MatchEngine ME = MatchEngine.getInstance();
 
+        Match M1 = new Match(AT, BT);
+        Match M2 = new Match(AT, BT);
         System.out.println(" \n 1ST LEG \n ");
-        ME.startGame(false, BT, AT);
+        ME.startGame(false, M1);
         System.out.println(" \n 2ND LEG \n ");
-        ME.startGame(false, AT, BT);
+        ME.startGame(false, M2);
 
 
     }

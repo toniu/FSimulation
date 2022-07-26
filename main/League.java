@@ -108,11 +108,8 @@ public class League {
         simulateSeason(rounds);
     }
 
-    public void updateResults(String msg) {
-
-    }
-
     public Team updateLeagueTable(int round) {
+        
         return null;
     }
 
@@ -125,27 +122,29 @@ public class League {
 
         /* First half of the season */
         for (int r = 1; r < rounds.length; r++) {
-            updateResults("==== Round " + r);
+            System.out.println("==== Round " + r);
 
             for (int m = 1; m < rounds[r].length; m++) {
                 Match cM = rounds[r][m];
-                ME.startGame(true, cM.getHomeTeam(), cM.getAwayTeam());
+                ME.startGame(true, cM);
             }
 
             leader = updateLeagueTable(r);
             System.out.println("\n" + leader.getName() + " is leading the table!");
         }
 
+        System.out.println("\n ==== Half-way into the season; commencing second-half of season");
+
         /* Second half of the season: mirror of first-half fixtures */
         int rC = rounds.length;
         for (int sR = 1; sR < rounds.length; sR++) {
             rC = rounds.length + sR;
-            updateResults("==== Round " + rC);
+            System.out.println("==== Round " + rC);
 
             /* For each match in that round */
             for (int sM = 1; sM < rounds[sR].length; sM++) {
                 Match scM = flipMatch(rounds[sR][sM]);
-                ME.startGame(true, scM.getHomeTeam(), scM.getAwayTeam());
+                ME.startGame(true, scM);
             }
 
             leader = updateLeagueTable(rC);
@@ -153,6 +152,6 @@ public class League {
         }
 
         System.out.println("\n ==== End of the League Season!");
-        updateResults(leader.getName() + " are CHAMPIONS OF " + this.name.toUpperCase() + "!");
+        System.out.println(leader.getName() + " are CHAMPIONS OF " + this.name.toUpperCase() + "!");
     }
 }

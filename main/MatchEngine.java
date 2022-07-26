@@ -486,16 +486,17 @@ public class MatchEngine {
         } 
     }
 
-    public void startGame(boolean isQuickRun, Team homeT, Team awayT) {
-        /*  */
+    public Match startGame(boolean isQuickRun, Match match) {
+        /* Quick run the match or show the match events */
         quickRun = isQuickRun;
         this.clearEvents();
         isPlaying = true;
         this.resetScore();
 
         /*-- Team Variables --*/
-        homeTeam = homeT;
-        awayTeam = awayT;
+
+        homeTeam = match.getHomeTeam();
+        awayTeam = match.getAwayTeam();
         
         /*-- Retrieve initial ratings for teams --*/
         homeAttack = homeTeam.getAttackRating();
@@ -616,7 +617,9 @@ public class MatchEngine {
         }
 
         /* Match complete; return the match results */
+        match.updateScores(quickRun, HScore, AScore, HAttempts, AAttempts);
 
+        return match;
         /* Code for extra time will come later... */
     }
 }

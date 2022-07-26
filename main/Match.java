@@ -92,6 +92,12 @@ public class Match {
         return this.awayAttempts;
     }
 
+    public void printResult() {
+        System.out.println(this.homeTeam.getName() + " " +
+         this.homeScore + " - " + 
+         this.awayScore + " " + this.awayTeam.getName());
+    }
+
     public void setHomeTeam(Team hT) {
         this.homeTeam = hT;
     }
@@ -100,7 +106,7 @@ public class Match {
         this.awayTeam = aT;
     }
 
-    public void updateScores(int HS, int AS, int HA, int AA) {
+    public void updateScores(boolean qR, int HS, int AS, int HA, int AA) {
         /* Only update score if the match has been played */
         this.played = true;
 
@@ -109,5 +115,12 @@ public class Match {
 
         this.homeAttempts = HA;
         this.awayAttempts = AA;
+
+        /* If the match is quick run i.e. simulated under a league
+         * print the result
+         */
+        if (qR) {
+            this.printResult();
+        }
     }
 }
