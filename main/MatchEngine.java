@@ -570,10 +570,10 @@ public class MatchEngine {
         clock = 0;
 
         matchState = "Kick Off";
-        print(homeTeam.getName() + " vs. " + awayTeam.getName());
 
         /* Only print detailed match events if the match is not quick ran */
         if (!quickRun) {
+            print(homeTeam.getName() + " vs. " + awayTeam.getName());
             newEvent(clock, matchState, true, half);
         }
 
@@ -609,11 +609,11 @@ public class MatchEngine {
             print("-- " + homeTeam.getAbbreviation() + " attempts: " + HAttempts);
             print("-- " + awayTeam.getAbbreviation() + " attempts: " + AAttempts);
         } else {
-            print("======== QUICK-RUN: " + homeTeam.getAbbreviation() +
+            /* print("======== QUICK-RUN: " + homeTeam.getAbbreviation() +
             " " + HScore + " - " +
            AScore + " " + awayTeam.getAbbreviation() + " -- ");
             print("-- " + homeTeam.getAbbreviation() + " attempts: " + HAttempts);
-            print("-- " + awayTeam.getAbbreviation() + " attempts: " + AAttempts);
+            print("-- " + awayTeam.getAbbreviation() + " attempts: " + AAttempts); */
         }
 
         /* Match complete; return the match results */

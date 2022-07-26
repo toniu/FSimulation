@@ -116,6 +116,32 @@ public class Match {
         this.homeAttempts = HA;
         this.awayAttempts = AA;
 
+        /* Update league table points if a league match */
+        if (!friendly) {
+            /* Check result */
+            if (HS > AS) {
+                /* Home Win: 3 points for home */
+                this.homeTeam.setWins(this.homeTeam.getWins() + 1);
+                this.homeTeam.setPoints(this.homeTeam.getPoints() + 3);
+
+                this.awayTeam.setLosses(this.awayTeam.getLosses() + 1);
+            } else if (AS > HS) {
+                /* Away Win: 3 points for away */
+                this.awayTeam.setWins(this.awayTeam.getWins() + 1);
+                this.awayTeam.setPoints(this.awayTeam.getPoints() + 3);
+
+                this.homeTeam.setLosses(this.homeTeam.getLosses() + 1);
+            } else {
+                /* Draw: 1 point each */
+                this.homeTeam.setPoints(this.homeTeam.getPoints() + 1);
+                this.awayTeam.setPoints(this.awayTeam.getPoints() + 1);
+                
+                this.homeTeam.setDraws(this.homeTeam.getDraws() + 1);
+                this.awayTeam.setDraws(this.awayTeam.getDraws() + 1);
+            }
+
+        }
+
         /* If the match is quick run i.e. simulated under a league
          * print the result
          */
