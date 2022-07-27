@@ -207,19 +207,28 @@ public class League {
         return teams.get(0);
     }
 
-    public void inputOptions(String m) {
+    public void inputOptions(String m, int round) {
         String answer = "";
         if (m.equals("SeasonStarted")) {
-            System.out.println("\n(a) Next round \n(b) Exit League Season");
+            System.out.println("\n(a) Next round \n(b) Show current league table \n(c) Exit League Season");
             answer = input.nextLine().toLowerCase();
             switch (answer) {
                 case "a":
                     break;
                 case "b":
+                    updateLeagueTable(round, true);                  
+                    break;
+                case "c":
                     System.out.println("Main Menu WIP!");
                     break;
                 default:
                     System.out.println("Invalid option, type in the letter of one of the options...");
+                    inputOptions("SeasonStarted", round);
+            }
+
+            /* Re-show menu if the user chose to see the table */
+            if (answer.equals("b")) {
+                inputOptions("SeasonStarted", round);
             }
         } else if (m.equals("SeasonFinished")) {
             System.out.println("\n(a) Restart season \n(b) Back to Main Menu");
@@ -233,6 +242,7 @@ public class League {
                     break;
                 default:
                     System.out.println("Invalid option, type in the letter of one of the options...");
+                    inputOptions("SeasonFinished", round);
             }
         }
     }
@@ -254,14 +264,14 @@ public class League {
                 ME.startGame(true, cM);
             }
 
-            inputOptions("SeasonStarted");
+            inputOptions("SeasonStarted", r + 1);
             leader = updateLeagueTable(r + 1, false);
         }
 
         System.out.println("\n ==== Half-way into the season; commencing second-half of season");
         System.out.println("\n" + leader.getName() + " is leading the table!");
         leader = updateLeagueTable((teams.size() - 1), true);
-        inputOptions("SeasonStarted");
+        inputOptions("SeasonStarted", (teams.size() - 1));
 
         /* Second half of the season: mirror of first-half fixtures */
         int rC = rounds.length;
@@ -275,13 +285,13 @@ public class League {
                 ME.startGame(true, scM);
             }
 
-            inputOptions("SeasonStarted");
+            inputOptions("SeasonStarted", rC + 1);
             leader = updateLeagueTable(rC + 1, false);
         }
 
         leader = updateLeagueTable(((teams.size() - 1) * 2), true);
         System.out.println("\n ===== End of the League Season!");
         System.out.println(leader.getName() + " are CHAMPIONS OF " + this.name.toUpperCase() + "!");
-        inputOptions("SeasonFinished");
+        inputOptions("SeasonFinished", 0);
     }
 }

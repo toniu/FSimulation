@@ -19,23 +19,30 @@ public class Loader {
     }
 
     public void loadData() {
-      File file = new File(".");
-      for(String fileNames : file.list()) System.out.println(fileNames);
 
-      
       if (this.leagues == null) {
         this.leagues = new ArrayList<League>();
       }
 
-      this.leagues.clear();
-      /* Load all leagues and teams */
-      loadLeagues();
-      loadTeams();
+      if (this.teams == null) {
+        this.teams = new ArrayList<Team>();
+      }
 
+      this.leagues.clear();
+      this.teams.clear();
+
+      /* Load all leagues and teams */
+       loadLeagues();
+       loadTeams();
+
+      /* Populating teams into leagues */
       for (League league : this.leagues) {
-        int currentID = league.getID();
+        int currentLeagueID = league.getID();
+
+        /* For each league, add the teams which have the same league ID */
         for (Team team : this.teams) {
-          if (team.getID() == currentID) {
+          int currentTeam = team.getLeagueID();
+          if (currentTeam == currentLeagueID) {
             league.getTeams().add(team);
           }
         }
@@ -51,13 +58,16 @@ public class Loader {
     }
 
     public void loadLeagues() {
-        try(Scanner LS = new Scanner(new File("resources/leagues.csv"))){
+        try(Scanner LS = new Scanner(new File("resources/leagues.csv"))) {
+            /* Skip the header row */
+            LS.nextLine();
             /* Read each league */
             while (LS.hasNextLine()) {
               String line = LS.nextLine();
           
               /* Scan for league's attributes */
               String[] LA = line.split(",");
+
               int lID = Integer.parseInt(LA[0]);
               String name = LA[1];
               String country = LA[2];
@@ -74,6 +84,8 @@ public class Loader {
 
     public void loadTeams() {
         try(Scanner TS = new Scanner(new File("resources/teams.csv"))){
+            /* Skip the header row */
+            TS.nextLine();
             /* Read each team */
             while (TS.hasNextLine()) {
               String line = TS.nextLine(); 
