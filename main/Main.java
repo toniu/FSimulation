@@ -12,7 +12,11 @@ public class Main {
         /* Select first league and test it */
         List<League> leagues = ML.getLeagues();
         League L1 = leagues.get(0);
+        League L2 = leagues.get(1);
+        League L3 = leagues.get(2);
+        League L4 = leagues.get(3);
+        League L5 = leagues.get(4);
 
-        L1.generateFixtures();
+        L5.generateFixtures();
     }
 }

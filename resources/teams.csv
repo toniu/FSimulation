@@ -19,3 +19,81 @@ teamID,name,abbreviation,leagueID,location,OVR,attack,midfield,defence
 18,Tottenham,TOT,1,London,82,86,80,80
 19,Watford,WAT,1,Watford,75,74,75,73
 20,Wolverhampton,WOL,1,Wolverhampton,78,78,81,77
+21,R Madrid,RMA,2,Madrid,84,84,85,83
+22,A Madrid,ATL,2,Madrid,84,84,83,83
+23,Barcelona,FCB,2,Barcelona,83,85,84,80
+24,Seville,SEV,2,Seville,82,81,81,83
+25,Villareal,VIL,2,Villareal,80,83,79,79
+26,R Sociedad,SOC,2,San Sebastián,80,82,80,78
+27,Bilbao,ATH,2,Bilbao,79,80,78,79
+28,R Betis,BET,2,Seville,79,78,80,78
+29,Valencia,VAL,2,Valencia,78,77,77,78
+30,Levante,LEV,2,Valencia,77,79,78,74
+31,Granada,GRA,2,Granada,77,77,77,78
+32,Vigo,CEL,2,Vigo,76,80,76,75
+33,Osasuna,OSA,2,Pamplona,76,78,76,75
+34,Espanyol,ESP,2,Barcelona,76,76,77,76
+35,Getafe,GET,2,Getafe,76,75,77,76
+36,Elche,ELC,2,Elche,75,76,75,72
+37,Mallorca,MAL,2,Palma,74,78,74,73
+38,Cadiz,CAD,2,Cadiz,74,76,74,73
+39,Rayo Vallecano,RAY,2,Madrid,74,75,74,72
+40,Alaves,ALA,2,VItoria-Gasteiz,74,74,74,75
+41,B Munich,BAY,3,Munich,84,92,85,81
+42,B Dortmund,DOR,3,Dortmund,81,84,81,81
+43,Leipzig,RBL,3,Leipzig,80,84,80,79
+44,Monchengladbach,MON,3,Monchengladbach,79,78,79,76
+45,Wolfsburg,VFL,3,Wolfsburg,78,80,78,77
+46,Leverkusen,LEV,3,Leverkusen,78,78,78,76
+47,Frankfurt,FRA,3,Frankfurt,77,76,76,75
+48,Hoffenheim,HOF,3,Sinsheim,76,76,76,75
+49,Hertha,BSC,3,Berlin,75,74,72,75
+50,U Berlin,UNI,3,Berlin,74,77,74,73
+51,Augsburg,AGS,3,Augsburg,74,73,73,74
+52,Freiburg,FRI,3,Freiburg im Breisgau,74,72,73,75
+53,Stuttgart,STU,3,Stuttgart,74,70,74,73
+54,Koln,KOL,3,Cologne,73,73,72,72
+55,Mainz,MAI,3,Mainz,73,71,74,74
+56,A Bielefeld,ABI,3,Bielefeld,72,71,71,72
+57,Bochum,BOC,3,Bochum,72,69,71,72
+58,G Furth,GFU,3,Furth,71,72,72,70
+59,Juventus,JUV,4,Turin,83,82,82,84
+60,Inter,INT,4,Milan,82,82,81,83
+61,Atalanta,ATA,4,Bergamo,80,81,80,78
+62,Milan,MIL,4,Milan,80,81,79,81
+63,Naples,NAP,4,Naples,80,81,79,81
+64,Lazio,LAZ,4,Rome,80,80,81,79
+65,Rome,ROM,4,Rome,79,77,79,77
+66,Florence,FIO,4,Florence,76,77,76,74
+67,Torino,TOR,4,Turin,76,76,74,74
+68,Bologna,BOL,4,Bologna,75,77,75,73
+69,Sampdoria,SAM,4,Genoa,75,77,75,73
+70,Cagliari,CAG,4,Cagliari,75,76,74,74
+71,H Verona,HEL,4,Verona,75,75,75,74
+72,Sassuolo,SAS,4,Sassuolo,75,74,75,72
+73,Udinese,UDI,4,Udine,74,75,74,73
+74,Genoa,GEN,4,Genoa,74,75,72,74
+75,Empoli,EMP,4,Empoli,71,73,69,70
+76,Spezia,SPE,4,La Spezia,71,70,70,67
+77,Salernitana,SAL,4,Salerno,70,76,68,70
+78,Venezia,VEN,4,Venice,70,71,68,69
+79,Paris SG,PSG,5,Paris,86,89,83,85
+80,Lyon,OL,5,Décines-Charpieu,79,77,79,78
+81,Monaco,ASM,5,Monaco,78,82,77,77
+82,Marseille,OM,5,Marseille,78,80,77,75
+83,Lille,LOS,5,Villeneuve-d'Ascq,78,77,79,78
+84,Nice,NIC,5,Nice,76,79,75,75
+85,Rennes,REN,5,Rennes,74,77,77,75
+86,Strasbourg,STR,5,Strasbourg,74,76,74,72
+87,Bordeaux,BOR,5,Bordeaux,74,75,75,71
+88,Lens,LEN,5,Lens,74,73,75,74
+89,Montpellier,MON,5,Montpellier,74,73,75,72
+90,Angers,ANG,5,Angers,74,71,72,74
+91,Saint-Ettiene,ASE,5,Saint-Ettiene,73,76,74,72
+92,Brest,BRE,5,Brest,73,73,73,71
+93,Nantes,NAN,5,Nantes,73,73,72,73
+94,Metz,MET,5,Longeville-lès-Metz,73,71,73,74
+95,Reims,REI,5,Reims,73,71,73,74
+96,Troyes,TRO,5,Troyes,72,73,72,70
+97,Lorient,LOR,5,Lorient,71,72,72,70
+98,Clermont,CLE,5,Clermont-Ferrand,71,71,71,71

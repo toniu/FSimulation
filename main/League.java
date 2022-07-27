@@ -185,6 +185,7 @@ public class League {
         if (showTable) {
             /* Display league table */
 
+            System.out.println("\n===== LEAGUE TABLE ");
             System.out.printf("\n%-6s%-20s%-6s%-6s%-6s%-6s%-6s%-6s%-6s%-6s\n\n",
                     "POS", "TEAM", "MP", "W", "D", "L", "GF", "GA", "GD", "PTS");
 
