@@ -6,6 +6,7 @@ public class Team {
     private String name;
     private String abbreviation;
     private int leagueID;
+    private String location;
 
     /* Ratings */
     private int attack;
@@ -24,12 +25,13 @@ public class Team {
     private int position;
     private int form; /* e.g. WWWLW = 4 (for four wins; maximum 5 wins) */
 
-    public Team(int newTID, String newName, String newAbbr, int newLID, int newAtt, int newMid, int newDef) {
+    public Team(int newTID, String newName, String newAbbr, int newLID, String newLoc, int newAtt, int newMid, int newDef) {
         /* Set general information */
         this.teamID = newTID;
         this.name = newName;
         this.abbreviation = newAbbr;
         this.leagueID = newLID;
+        this.location = newLoc;
 
         /* Set ratings */
         this.attack = newAtt;
@@ -64,6 +66,10 @@ public class Team {
 
     public String getName() {
         return this.name;
+    }
+
+    public String getLocation() {
+        return this.location;
     }
 
     public String getAbbreviation() {

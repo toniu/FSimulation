@@ -7,8 +7,14 @@ import java.util.List;
 import java.util.Scanner;
 
 public class League {
+    /* General */
     private int ID;
     private String name;
+    private String country;
+    private int division;
+
+
+    /* League table and results */
     private List<Team> teams = new ArrayList<Team>();
     private List<Match> matches = new ArrayList<Match>();
     private Comparator<Team> LTSorter = new League.LTSorter();
@@ -16,9 +22,18 @@ public class League {
     /* For inputs */
     private Scanner input = new Scanner(System.in);
 
-    public League(int id, String lN, List<Team> teams) {
+    public League(int id, String lN, String lC, int lD) {
         this.ID = id;
         this.name = lN;
+        this.country = lC;
+        this.division = lD;
+    }
+
+    public League(int id, String lN, String lC, int lD, List<Team> teams) {
+        this.ID = id;
+        this.name = lN;
+        this.country = lC;
+        this.division = lD;
         this.teams = teams;
     }
 
@@ -30,8 +45,20 @@ public class League {
         return this.name;
     }
 
+    public String getCountry() {
+        return this.country;
+    }
+
+    public int getDivision() {
+        return this.division;
+    }
+
     public List<Team> getTeams() {
         return this.teams;
+    }
+
+    public void setTeams(List<Team> nT) {
+        this.teams = nT;
     }
 
     public void clearResults() {
@@ -89,15 +116,15 @@ public class League {
         Match[][] interleaved = new Match[totalRounds][];
 
         int even = 0;
-        int odd = (teamSize / 2) - 1;
-
+        int odd = (teamSize / 2);
+        
         for (int p = 0; p < rounds.length; p++) {
             if (p % 2 == 0) {
                 even++;
-                interleaved[p] = rounds[even];
+                interleaved[p] = rounds[even - 1];
             } else {
                 odd++;
-                interleaved[p] = rounds[odd];
+                interleaved[p] = rounds[odd - 1];
             }
         }
 
@@ -159,7 +186,7 @@ public class League {
             /* Display league table */
 
             System.out.printf("\n%-6s%-20s%-6s%-6s%-6s%-6s%-6s%-6s%-6s%-6s\n\n",
-            "POS","TEAM","MP","W","D","L","GF","GA","GD","PTS");
+                    "POS", "TEAM", "MP", "W", "D", "L", "GF", "GA", "GD", "PTS");
 
             for (int i = 0; i < teams.size(); i++) {
                 System.out.printf("%-6d%-20s%-6d%-6d%-6d%-6d%-6d%-6d%-6d%-6d\n",
@@ -191,7 +218,7 @@ public class League {
                 case "b":
                     System.out.println("Main Menu WIP!");
                     break;
-                default: 
+                default:
                     System.out.println("Invalid option, type in the letter of one of the options...");
             }
         } else if (m.equals("SeasonFinished")) {
@@ -204,7 +231,7 @@ public class League {
                 case "b":
                     System.out.println("Main Menu WIP!");
                     break;
-                default: 
+                default:
                     System.out.println("Invalid option, type in the letter of one of the options...");
             }
         }
@@ -220,7 +247,7 @@ public class League {
         System.out.println("\n" + this.name.toUpperCase() + "\n==== Season started \n ");
         /* First half of the season */
         for (int r = 0; r < rounds.length; r++) {
-            System.out.println("==== Round " + (r + 1));
+            System.out.println("\n===== Round " + (r + 1));
 
             for (int m = 0; m < rounds[r].length; m++) {
                 Match cM = rounds[r][m];
@@ -240,7 +267,7 @@ public class League {
         int rC = rounds.length;
         for (int sR = 0; sR < rounds.length; sR++) {
             rC = rounds.length + sR;
-            System.out.println("==== Round " + (rC + 1));
+            System.out.println("\n===== Round " + (rC + 1));
 
             /* For each match in that round */
             for (int sM = 0; sM < rounds[sR].length; sM++) {
@@ -253,7 +280,7 @@ public class League {
         }
 
         leader = updateLeagueTable(((teams.size() - 1) * 2), true);
-        System.out.println("\n ==== End of the League Season!");
+        System.out.println("\n ===== End of the League Season!");
         System.out.println(leader.getName() + " are CHAMPIONS OF " + this.name.toUpperCase() + "!");
         inputOptions("SeasonFinished");
     }

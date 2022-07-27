@@ -1,0 +1,21 @@
+teamID,name,abbreviation,leagueID,location,OVR,attack,midfield,defence
+1,Arsenal,ARS,1,London,79,83,81,77
+2,Aston,AST,1,Birmingham,78,78,76,77
+3,Brentford,BRE,1,London,73,73,74,73
+4,Brighton,BHA,1,Brighton,76,75,77,75
+5,Burnley,BUR,1,Burnley,76,76,76,77
+6,Chelsea,CHE,1,London,83,84,86,81
+7,Croydon,CRY,1,London,76,77,76,74
+8,Everton,EVE,1,Everton,79,79,79,79
+9,Leeds,LEE,1,Leeds,77,78,78,76
+10,Leicester,LEI,1,Leicester,80,82,81,79
+11,Liverpool,LFC,1,Liverpool,84,86,83,85
+12,Manchester C,MCI,1,Manchester,85,85,85,86
+13,Manchester U,MUN,1,Manchester,84,85,84,83
+14,Newcastle,NEW,1,Newcastle,76,79,75,74
+15,Norwich,NOR,1,Norwich,74,76,74,74
+16,Southampton,SOU,1,Southampton,76,76,77,73
+17,Statford,WHU,1,London,79,79,79,79
+18,Tottenham,TOT,1,London,82,86,80,80
+19,Watford,WAT,1,Watford,75,74,75,73
+20,Wolverhampton,WOL,1,Wolverhampton,78,78,81,77
