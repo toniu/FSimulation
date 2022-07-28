@@ -42,7 +42,7 @@ public class Menu {
                     System.out.println("(" + (i + 1) + ") " + leagues.get(i).getName());
                 }
             }
-    
+
             leagueIndex = intScanner.nextInt();
             if (leagueIndex > 0 && leagueIndex <= maxLeagueNum) {
                 /* Valid input */
@@ -66,11 +66,12 @@ public class Menu {
         /* Team select validation */
 
         while (!teamSelected) {
-            System.out.println("\n==== Select Team from " + selectedLeague.getName().toUpperCase()  + "\n (Press 0 to exit): \n");
+            System.out.println(
+                    "\n==== Select Team from " + selectedLeague.getName().toUpperCase() + "\n (Press 0 to exit): \n");
             for (int i = 0; i < teams.size(); i++) {
                 System.out.println("(" + (i + 1) + ") " + teams.get(i).getName());
             }
-    
+
             teamIndex = intScanner.nextInt();
             if (teamIndex > 0 && teamIndex <= teams.size()) {
                 /* Valid input */
@@ -102,15 +103,14 @@ public class Menu {
             homeLeagueIndex--;
             /* Find league of home team using index */
             hL = ML.getLeagues().get(homeLeagueIndex);
-             /* Find location and country */
+            /* Find location and country */
             country = hL.getCountry();
-
 
             System.out.println("\n----- Selecting Team: ");
             int homeTeamIndex = selectTeam(homeLeagueIndex);
             if (homeTeamIndex != 0) {
-                 /* User is selecting from 1...n but arrays begin with index 0 */
-                 homeTeamIndex--;
+                /* User is selecting from 1...n but arrays begin with index 0 */
+                homeTeamIndex--;
 
                 /* Find team using index selected */
                 hT = hL.getTeams().get(homeTeamIndex);
@@ -136,8 +136,8 @@ public class Menu {
             System.out.println("\n----- Selecting Team: ");
             int awayTeamindex = selectTeam(awayLeagueIndex);
             if (awayTeamindex != 0) {
-                 /* User is selecting from 1...n but arrays begin with index 0 */
-                 awayTeamindex--;
+                /* User is selecting from 1...n but arrays begin with index 0 */
+                awayTeamindex--;
 
                 /* Find team using index selected */
                 aT = aL.getTeams().get(awayTeamindex);
@@ -156,7 +156,8 @@ public class Menu {
             boolean askToStart = false;
 
             while (!askToStart) {
-                System.out.println("\n===== Friendly Match: " + hT.getName() + " vs. " + aT.getName() + "\nLocation: " + hT.getLocation() + ", " + country );
+                System.out.println("\n===== Friendly Match: " + hT.getName() + " vs. " + aT.getName() + "\nLocation: "
+                        + hT.getLocation() + ", " + country);
                 System.out.println("\n(a) Kick-off \n(b) Back to Main Menu");
                 begin = scanner.nextLine();
                 switch (begin) {
@@ -178,8 +179,12 @@ public class Menu {
                                 boolean askUser = false;
 
                                 while (!askUser) {
-                                    System.out.println("\n(a) Rematch \n(b) Select different teams \n(c) Return to main menu");
-                                    /* User can choose to rematch, select different teams OR return back to main menu  */
+                                    System.out.println(
+                                            "\n(a) Rematch \n(b) Select different teams \n(c) Return to main menu");
+                                    /*
+                                     * User can choose to rematch, select different teams OR return back to main
+                                     * menu
+                                     */
                                     String continueMatch = scanner.nextLine();
                                     switch (continueMatch) {
                                         case "a":
@@ -208,7 +213,7 @@ public class Menu {
                         break;
                     case "b":
                         askToStart = true;
-                        System.out.println("\nExiting match...");
+                        System.out.println("\n===== Exiting match...");
                         break;
                     default:
                         System.out.println("\nInvalid input. Select one of the letter options");
@@ -220,35 +225,81 @@ public class Menu {
     public void simulateLeague() {
         List<League> leagues = ML.getLeagues();
         League selectedLeague = null;
-         /* League select validation */
-         System.out.println("\n===== Select League: ");
-         int leagueIndex = selectLeague();
-         if (leagueIndex != 0) {
-             /* User is selecting from 1...n but arrays begin with index 0 */
-             leagueIndex--;
+        /* League select validation */
+        System.out.println("\n===== Select League: ");
+        int leagueIndex = selectLeague();
+        if (leagueIndex != 0) {
+            /* User is selecting from 1...n but arrays begin with index 0 */
+            leagueIndex--;
             selectedLeague = leagues.get(leagueIndex);
 
-         } else {
-             /* Return to main menu */
-             return;
-         }
+        } else {
+            /* Return to main menu */
+            return;
+        }
 
-         /* If league has been selected, simulate season */
+        /* If league has been selected, simulate season */
         if (selectedLeague != null) {
             String begin = "";
-            System.out.println("\n League simulation of: " + selectedLeague.getName() + "\nCountry: " + selectedLeague.getCountry() + "\nDivision: " + selectedLeague.getDivision());
-            System.out.println("\n(a) Kick-off the season \n(b) Back to Main Menu");
-            begin = scanner.nextLine();
-            switch (begin) {
-                case "a":
-                    /* Start simulation of league */
-                    selectedLeague.generateFixtures();
-                    break;
-                case "b":
-                    System.out.println("\n Exiting match...");
-                    break;
-                default:
-                    System.out.println("Invalid input. Select one of the letter options");
+            boolean askToStart = false;
+            boolean leagueMode = false;
+            System.out.println("\n===== League simulation of: " + selectedLeague.getName() + "\nCountry: "
+                    + selectedLeague.getCountry() + "\nDivision: " + selectedLeague.getDivision());
+
+            while (!askToStart) {
+                System.out.println("\n(a) Kick-off the season \n(b) Back to Main Menu");
+                begin = scanner.nextLine();
+                switch (begin) {
+                    case "a":
+                        askToStart = true;
+                        leagueMode = true;
+
+                        while (leagueMode) {
+                            boolean askUser = false;
+                            /* Start simulation of league */
+                            selectedLeague.generateFixtures();
+
+                            /* Only ask user for restarting the league once the season has completed */
+                            if (selectedLeague.isSeasonCompleted()) {
+                                while (!askUser) {
+                                    System.out.println(
+                                            "\n(a) Restart season \n(b) Select different league \n(c) Back to Main Menu");
+                                    String answer = scanner.nextLine().toLowerCase();
+                                    switch (answer) {
+                                        case "a":
+                                            askUser = true;
+                                            System.out.println("\n===== Restarting league season...");
+                                            break;
+                                        case "b":
+                                            askUser = true;
+                                            leagueMode = false;
+                                            System.out.println("\n===== Selecting different league...");
+                                            simulateLeague();
+                                            break;
+                                        case "c":
+                                            askUser = true;
+                                            leagueMode = false;
+                                            System.out.println("\n===== Exiting simulation of league...");
+                                            break;
+                                        default:
+                                            System.out.println("Invalid option, type in the letter of one of the options...");
+                                    }
+                                }
+                            } else {
+                                /* User wanted to quit simulation of league while season was incomplete */
+                                askToStart = true;
+                                leagueMode = false;
+                            }
+                        }
+
+                        break;
+                    case "b":
+                        askToStart = true;
+                        System.out.println("\n===== Exiting simulation of league...");
+                        break;
+                    default:
+                        System.out.println("Invalid input. Select one of the letter options");
+                }
             }
         }
     }
@@ -256,10 +307,13 @@ public class Menu {
     public void mainMenu() {
         String menuOption = "";
 
-        System.out.println("\n===== FSIMULATION ");
+        System.out.println("\n----------------------------------------------------------------------");
+        System.out.println("FSimulation MAIN MENU ");
+        System.out.println("----------------------------------------------------------------------");
         System.out.println("\n(a) Simulate friendly ");
         System.out.println("(b) Simulate league ");
         System.out.println("(c) Exit Simulation ");
+        System.out.println("\n----------------------------------------------------------------------");
 
         menuOption = scanner.nextLine();
         switch (menuOption) {
@@ -270,7 +324,7 @@ public class Menu {
                 simulateLeague();
                 break;
             case "c":
-                System.out.println("\nExiting simulation...");
+                System.out.println("\n===== Exiting simulation...");
                 this.isRunning = false;
                 break;
             default:

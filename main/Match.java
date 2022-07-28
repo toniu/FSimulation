@@ -113,11 +113,6 @@ public class Match {
     public void resetStats() {
         /* Starting new match so reset stats... */
         this.played = false;
-        
-        /* Reset team statistics */
-        this.homeTeam.resetStats();
-        this.awayTeam.resetStats();
-
         /* Reset match statistics */
         this.homeScore = 0;
         this.awayScore = 0;
