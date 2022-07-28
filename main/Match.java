@@ -42,6 +42,10 @@ public class Match {
         friendly = false;
     }
 
+    public boolean hasCompleted() {
+        return this.played;
+    }
+
     public League getLeague() {
         if (friendly) {
             return null;
@@ -104,6 +108,21 @@ public class Match {
 
     public void setAwayTeam(Team aT) {
         this.awayTeam = aT;
+    }
+
+    public void resetStats() {
+        /* Starting new match so reset stats... */
+        this.played = false;
+        
+        /* Reset team statistics */
+        this.homeTeam.resetStats();
+        this.awayTeam.resetStats();
+
+        /* Reset match statistics */
+        this.homeScore = 0;
+        this.awayScore = 0;
+        this.homeAttempts = 0;
+        this.awayAttempts = 0;
     }
 
     public void updateScores(boolean qR, int HS, int AS, int HA, int AA) {

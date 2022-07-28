@@ -3,6 +3,7 @@ package main;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 public class MatchEngine {
 
@@ -15,6 +16,9 @@ public class MatchEngine {
         }
         return singleton;
     }
+    
+    /* Input */
+    Scanner input = new Scanner(System.in);
 
     /* Match states */
     String matchState = "";
@@ -50,6 +54,11 @@ public class MatchEngine {
     int HAttempts = 0;
     int AAttempts = 0;
 
+    double homePossession = 0;
+    double awayPossession = 0;
+    double hPosCount = 0;
+    double aPosCount = 0;
+
     /* Printing messages */
     public void print(String msg) {
         System.out.println(msg);
@@ -65,10 +74,24 @@ public class MatchEngine {
         events.clear();
     }
 
+    /* Calculate possession */
+    public void calculatePossession() {
+        homePossession = Math.floor(( hPosCount / (hPosCount + aPosCount)) * 100);
+        awayPossession = 100 - homePossession;
+    }
+
     /* Reset score */
-    public void resetScore() {
+    public void resetScore(Match m) {
+        /* Match */
+        m.resetStats();
+        /* Local */
         this.HScore = 0;
         this.AScore = 0;
+        HAttempts = 0;
+        AAttempts = 0;
+
+        hPosCount = 0;
+        aPosCount = 0;
     }
 
     /* Increment clock */
@@ -111,17 +134,17 @@ public class MatchEngine {
             if (half == 1) {
                 event = "======== KICK-OFF --";
             } else if (half == 2) {
-                event = "======== HALF-TIME: " + homeTeam.getAbbreviation() +
+                event = "\n======== HALF-TIME: " + homeTeam.getName() +
                  " " + HScore + " - " +
-                AScore + " " + awayTeam.getAbbreviation() + " -- ";
+                AScore + " " + awayTeam.getName() + " -- \n ";
             } else if (half == 3) {
-                event = "======== FULL-TIME: " + homeTeam.getAbbreviation() +
+                event = "\n======== FULL-TIME: " + homeTeam.getName() +
                  " " + HScore + " - " +
-                AScore + " " + awayTeam.getAbbreviation() + " -- ";
+                AScore + " " + awayTeam.getName() + " -- \n";
             } else if (half == 4) {
-                event = "======== EXTRA-TIME HALF TIME: " + homeTeam.getAbbreviation() +
+                event = "======== EXTRA-TIME HALF TIME: " + homeTeam.getName() +
                  " " + HScore + " - " +
-                AScore + " " + awayTeam.getAbbreviation() + " -- ";
+                AScore + " " + awayTeam.getName() + " -- ";
             }
             /*-- Resumed match --*/
         } else {
@@ -306,8 +329,10 @@ public class MatchEngine {
             int hLimit = (int) Math.floor(((homeMidfield) / (homeMidfield + awayMidfield)) * 100);
             int hPG = RNG.nextInt(100) + 1;
             if (hPG <= hLimit * 0.85) {
+                hPosCount++;
                 return "hPos";
             } else if (hPG >= hLimit * 1.15) {
+                aPosCount++;
                 return "aPos";
             } else {
                 return "noPos";
@@ -317,8 +342,10 @@ public class MatchEngine {
             int aLimit = (int) Math.floor(((awayMidfield) / (homeMidfield + awayMidfield)) * 100);
             int aPG = RNG.nextInt(100) + 1;
             if (aPG <= aLimit * 0.85) {
+                aPosCount++;
                 return "aPos";
             } else if (aPG >= aLimit * 1.15) {
+                hPosCount++;
                 return "hPos";
             } else {
                 return "noPos";
@@ -491,7 +518,7 @@ public class MatchEngine {
         quickRun = isQuickRun;
         this.clearEvents();
         isPlaying = true;
-        this.resetScore();
+        this.resetScore(match);
 
         /*-- Team Variables --*/
 
@@ -573,7 +600,8 @@ public class MatchEngine {
 
         /* Only print detailed match events if the match is not quick ran */
         if (!quickRun) {
-            print(homeTeam.getName() + " vs. " + awayTeam.getName());
+            print("\n===== " + homeTeam.getName() + " vs. " + awayTeam.getName());
+            print("\nEvent Highlights: \n");
             newEvent(clock, matchState, true, half);
         }
 
@@ -589,35 +617,52 @@ public class MatchEngine {
         clock = 45;
         half = 2;
         matchState = "HT";
-        if (!quickRun) {
-            newEvent(clock, matchState, true, half);
-        }
-        int shST = RNG.nextInt(6);
-        
-        matchState = " ";
-        while (clock < (90 + shST)) {
-            clock++;
-            matchProgress();
-        }
+        calculatePossession();
 
-        /* End of second half */
-        clock = 90;
-        half = 3;
-        matchState = "FT";
         if (!quickRun) {
             newEvent(clock, matchState, true, half);
+            print("-- Possession: " + homeTeam.getAbbreviation() + " " + homePossession + "% - " + awayPossession + "% " + awayTeam.getAbbreviation());
             print("-- " + homeTeam.getAbbreviation() + " attempts: " + HAttempts);
             print("-- " + awayTeam.getAbbreviation() + " attempts: " + AAttempts);
-        } else {
-            /* print("======== QUICK-RUN: " + homeTeam.getAbbreviation() +
-            " " + HScore + " - " +
-           AScore + " " + awayTeam.getAbbreviation() + " -- ");
-            print("-- " + homeTeam.getAbbreviation() + " attempts: " + HAttempts);
-            print("-- " + awayTeam.getAbbreviation() + " attempts: " + AAttempts); */
         }
 
-        /* Match complete; return the match results */
-        match.updateScores(quickRun, HScore, AScore, HAttempts, AAttempts);
+        System.out.println("\n(a) Begin second-half \n(b) Exit Match ");
+        String continueGame = input.nextLine();
+        switch (continueGame) {
+            case "a":
+                /* Begin second half */
+
+                int shST = RNG.nextInt(6);
+        
+                matchState = " ";
+                while (clock < (90 + shST)) {
+                    clock++;
+                    matchProgress();
+                }
+
+                /* End of second half */
+                clock = 90;
+                half = 3;
+                matchState = "FT";
+                calculatePossession();
+
+                if (!quickRun) {
+                    newEvent(clock, matchState, true, half);
+                    print("-- Possession: " + homeTeam.getAbbreviation() + " " + homePossession + "% - " + awayPossession + "% " + awayTeam.getAbbreviation());
+                    print("-- " + homeTeam.getAbbreviation() + " attempts: " + HAttempts);
+                    print("-- " + awayTeam.getAbbreviation() + " attempts: " + AAttempts);
+                }
+
+                /* Match complete; return the match results */
+                match.updateScores(quickRun, HScore, AScore, HAttempts, AAttempts);
+                break;
+            case "b":
+                /* Quit the match */
+                System.out.println("\n Exiting match...");
+                break;
+            default:
+                System.out.println("Invalid input. Select one of the letter options");
+        }
 
         return match;
         /* Code for extra time will come later... */
