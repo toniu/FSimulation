@@ -1,6 +1,6 @@
 # FSimulation
 
-A Java football simulation project which includes the simulation of leagues and matches between teams based on their FIFA ratings (attack, defence, midfield, and OVR rating).
+A Java OOP football simulation project which includes the simulation of leagues and matches between teams based on their FIFA ratings (attack, defence, midfield, and OVR rating).
 
 # Menu
 a) Simulate friendly
