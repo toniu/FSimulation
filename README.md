@@ -58,4 +58,5 @@ Processes of a match (For 90 minutes plus stoppage time):
 
  # Game data
  The data with the leagues and teams will be loaded using CSV files.
+ ![teams](screenshots/fs-league-logos.png)
 
