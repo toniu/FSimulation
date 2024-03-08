@@ -7,16 +7,16 @@ import java.util.Scanner;
 
 public class MatchEngine {
 
-    /* Match engine is a singleton  */
+    /* Match engine is a singleton */
     private static MatchEngine singleton = null;
 
     public static synchronized MatchEngine getInstance() {
-        if (singleton  == null) {
+        if (singleton == null) {
             singleton = new MatchEngine();
         }
         return singleton;
     }
-    
+
     /* Input */
     Scanner input = new Scanner(System.in);
 
@@ -76,7 +76,7 @@ public class MatchEngine {
 
     /* Calculate possession */
     public void calculatePossession() {
-        homePossession = Math.floor(( hPosCount / (hPosCount + aPosCount)) * 100);
+        homePossession = Math.floor((hPosCount / (hPosCount + aPosCount)) * 100);
         awayPossession = 100 - homePossession;
     }
 
@@ -135,16 +135,16 @@ public class MatchEngine {
                 event = "======== KICK-OFF --";
             } else if (half == 2) {
                 event = "\n======== HALF-TIME: " + homeTeam.getName() +
-                 " " + HScore + " - " +
-                AScore + " " + awayTeam.getName() + " -- \n ";
+                        " " + HScore + " - " +
+                        AScore + " " + awayTeam.getName() + " -- \n ";
             } else if (half == 3) {
                 event = "\n======== FULL-TIME: " + homeTeam.getName() +
-                 " " + HScore + " - " +
-                AScore + " " + awayTeam.getName() + " -- \n";
+                        " " + HScore + " - " +
+                        AScore + " " + awayTeam.getName() + " -- \n";
             } else if (half == 4) {
                 event = "======== EXTRA-TIME HALF TIME: " + homeTeam.getName() +
-                 " " + HScore + " - " +
-                AScore + " " + awayTeam.getName() + " -- ";
+                        " " + HScore + " - " +
+                        AScore + " " + awayTeam.getName() + " -- ";
             }
             /*-- Resumed match --*/
         } else {
@@ -156,7 +156,7 @@ public class MatchEngine {
     }
 
     /* Clamps the value to be within specified number range */
-    public double clampV(double value, double min, double max) {
+    public double clamp(double value, double min, double max) {
         if (value < min) {
             return min;
         } else if (value > max) {
@@ -171,6 +171,7 @@ public class MatchEngine {
     /**
      * Determines if there is going to be action in the minute
      * 60% chance of some action taking place
+     * 
      * @return action will happen or not
      */
     public boolean beginAction() {
@@ -182,50 +183,65 @@ public class MatchEngine {
         if (side.equals("H")) {
             /* Home team has a chance... */
             int hLimit = (int) Math.floor((homeAttack / (awayDefence + homeAttack)) * 100);
+            /* Bounds: probability falls in either upper bound, lower bound or the "middle" (nothing happens) */
+            double hLBound = this.clamp(hLimit * 0.75, 5, 90);
+            double hUBound = this.clamp(hLimit * 1.25, hLimit, 95);
 
             int hP = RNG.nextInt(100) + 1;
-			if (hP <= hLimit * 0.85) {
-				/* Home goal */
-				return "HGoal";
-            } else if (hP >= hLimit * 1.15) {
-				/* Posession is lost from home team */
-				return "noPos";
+            /* Print test 
+            System.out.println("\nhLimit hLBound hUBound hP");
+            System.out.println(hLimit + " " + hLBound + " " + hUBound + " " + hP); */
+ 
+            if (hP <= hLBound) {
+                /* Home goal */
+                return "HGoal";
+            } else if (hP >= hUBound) {
+                /* Posession is lost from home team */
+                return "noPos";
             } else {
-				/* Chance could lead to a home set-piece... */
-				int heC = RNG.nextInt(100) + 1;
-				if (heC <= 40) {
+                /* Chance could lead to a home set-piece... */
+                int heC = RNG.nextInt(100) + 1;
+                if (heC <= 35) {
                     /* Home team has free-kick... */
-					return "Home Freekick";
-                } else if (heC > 40 && heC <= 80) {
+                    return "Home Freekick";
+                } else if (heC > 35 && heC <= 80) {
                     /* Home team has a corner... */
-					return "Home Corner";
+                    return "Home Corner";
                 } else
                     /* Home team has a penalty... */
-					return "Home Penalty";
+                    return "Home Penalty";
             }
         } else {
             /* Away team has a chance... */
             int aLimit = (int) Math.floor((awayAttack / (homeDefence + awayAttack)) * 100);
+            /* Bounds: probability falls in either upper bound, lower bound or the "middle" (nothing happens) */
+            double aLBound = this.clamp(aLimit * 0.60, 5, 90);
+            double aUBound = this.clamp(aLimit * 1.25, aLimit, 95);
 
             int aP = RNG.nextInt(100) + 1;
-			if (aP <= aLimit * 0.85) {
-				/* Away goal */
-				return "AGoal";
-            } else if (aP >= aLimit * 1.15) {
-				/* Posession is lost from away team */
-				return "noPos";
+
+            /* Print test 
+            System.out.println("\naLimit aLBound aUBound aP");
+            System.out.println(aLimit + " " + aLBound + " " + aUBound + " " + aP); */
+
+            if (aP <= aLBound) {
+                /* Away goal */
+                return "AGoal";
+            } else if (aP >= aUBound) {
+                /* Posession is lost from away team */
+                return "noPos";
             } else {
-				/* Chance could lead to an away set-piece... */
-				int aeC = RNG.nextInt(100) + 1;
-				if (aeC <= 40) {
+                /* Chance could lead to an away set-piece... */
+                int aeC = RNG.nextInt(100) + 1;
+                if (aeC <= 25) {
                     /* Away team has free-kick... */
-					return "Away Freekick";
-                } else if (aeC > 40 && aeC <= 80) {
+                    return "Away Freekick";
+                } else if (aeC > 25 && aeC <= 95) {
                     /* Away team has a corner... */
-					return "Away Corner";
+                    return "Away Corner";
                 } else
                     /* Away team has a penalty... */
-					return "Away Penalty";
+                    return "Away Penalty";
             }
         }
     }
@@ -235,6 +251,7 @@ public class MatchEngine {
      * 15% chance of scoring from corner,
      * 35% chance of scoring from free-kick,
      * 75% chance of penalty being scored,
+     * 
      * @return outcome of set-piee
      */
     public String createSetPiece(String side, String setpiece) {
@@ -302,20 +319,35 @@ public class MatchEngine {
     public String createBuildup(String side) {
         /* Home team trying to build up an attack... */
         if (side.equals("H")) {
-            int hLimit = (int) Math.floor(((homeMidfield + homeOVR) / (homeMidfield + awayMidfield + homeOVR + awayOVR)) * 100);
+            int hLimit = (int) Math
+                    .floor(((homeMidfield + homeOVR) / (homeMidfield + awayMidfield + homeOVR + awayOVR)) * 100);
 
+            double hBound = this.clamp(hLimit * 0.95, 5, 90);
             int hPb = RNG.nextInt(100) + 1;
-            if (hPb <= hLimit * 0.95) {
+
+            /* Print test 
+
+            System.out.println("\nhLimit hBound hPb");
+            System.out.println(hLimit + " " + hBound + " " + hPb);*/
+
+            if (hPb <= hBound) {
                 return "HChanceCreated";
             } else {
                 return "noPos";
             }
         } else {
             /* Away team trying to build up an attack... */
-            int aLimit = (int) Math.floor(((awayMidfield + awayOVR) / (homeMidfield + awayMidfield + homeOVR + awayOVR)) * 100);
+            int aLimit = (int) Math
+                    .floor(((awayMidfield + awayOVR) / (homeMidfield + awayMidfield + homeOVR + awayOVR)) * 100);
 
+            double aBound = this.clamp(aLimit * 0.70, 5, 90);
             int aPb = RNG.nextInt(100) + 1;
-            if (aPb <= aLimit * 0.95) {
+
+            /* Print test 
+            System.out.println("\naLimit aBound aPb");
+            System.out.println(aLimit + " " + aBound + " " + aPb); */
+
+            if (aPb <= aBound) {
                 return "AChanceCreated";
             } else {
                 return "noPos";
@@ -327,11 +359,19 @@ public class MatchEngine {
         /* Home midfield better than away midfield */
         if (homeMidfield >= awayMidfield) {
             int hLimit = (int) Math.floor(((homeMidfield) / (homeMidfield + awayMidfield)) * 100);
+            double hLBound = this.clamp(hLimit * 0.85, 5, 90);
+            double hUBound = this.clamp(hLimit * 1.25, hLimit, 95);
+
             int hPG = RNG.nextInt(100) + 1;
-            if (hPG <= hLimit * 0.85) {
+
+            /* Print test
+            System.out.println("\nhLimit hLBound hUBound hPG");
+            System.out.println(hLimit + " " + hLBound + " " + hUBound + " " + hPG); */
+
+            if (hPG <= hLBound) {
                 hPosCount++;
                 return "hPos";
-            } else if (hPG >= hLimit * 1.15) {
+            } else if (hPG >= hUBound) {
                 aPosCount++;
                 return "aPos";
             } else {
@@ -340,11 +380,19 @@ public class MatchEngine {
         } else {
             /* Away midfield is better than home midfield */
             int aLimit = (int) Math.floor(((awayMidfield) / (homeMidfield + awayMidfield)) * 100);
+            double aLBound = this.clamp(aLimit * 0.75, 5, 90);
+            double aUBound = this.clamp(aLimit * 1.25, aLimit, 95);
+
             int aPG = RNG.nextInt(100) + 1;
-            if (aPG <= aLimit * 0.85) {
+
+            /* Print test 
+            System.out.println("\naLimit aLBound aUBound aPG");
+            System.out.println(aLimit + " " + aLBound + " " + aUBound + " " + aPG); */
+
+            if (aPG <= aLBound) {
                 aPosCount++;
                 return "aPos";
-            } else if (aPG >= aLimit * 1.15) {
+            } else if (aPG >= aUBound) {
                 hPosCount++;
                 return "hPos";
             } else {
@@ -395,8 +443,8 @@ public class MatchEngine {
                 }
                 addScore("H");
             } else if (HOutcome.equals("Home Freekick") ||
-            HOutcome.equals("Home Corner") ||
-            HOutcome.equals("Home Penalty")) {
+                    HOutcome.equals("Home Corner") ||
+                    HOutcome.equals("Home Penalty")) {
                 /* Home chance leads to set-piece */
                 hPosCount++;
                 HAttempts++;
@@ -407,8 +455,8 @@ public class MatchEngine {
                 }
 
                 String spOutcome = createSetPiece("H", matchState);
-				matchState = spOutcome;
-                
+                matchState = spOutcome;
+
                 if (spOutcome.equals("HGoal")) {
                     /* Home scores from set-piece */
                     if (!quickRun) {
@@ -446,8 +494,8 @@ public class MatchEngine {
                 }
                 addScore("A");
             } else if (AOutcome.equals("Away Freekick") ||
-            AOutcome.equals("Away Corner") ||
-            AOutcome.equals("Away Penalty")) {
+                    AOutcome.equals("Away Corner") ||
+                    AOutcome.equals("Away Penalty")) {
                 /* Away chance leads to set-piece */
                 aPosCount++;
                 AAttempts++;
@@ -458,8 +506,8 @@ public class MatchEngine {
                 }
 
                 String spOutcome = createSetPiece("A", matchState);
-				matchState = spOutcome;
-                
+                matchState = spOutcome;
+
                 if (spOutcome.equals("AGoal")) {
                     /* Away scores from set-piece */
                     if (!quickRun) {
@@ -480,7 +528,6 @@ public class MatchEngine {
                 }
             }
         }
-
 
         if (beginAction()) {
             if (gainPossession().equals("hPos")) {
@@ -503,7 +550,7 @@ public class MatchEngine {
                 if (!quickRun) {
                     newEvent(clock, matchState, true, half);
                 }
-            
+
                 /* Away team able to build up an attack with possession */
                 if (createBuildup("A").equals("AChanceCreated")) {
                     matchState = "Away Chance";
@@ -516,13 +563,13 @@ public class MatchEngine {
         } else {
             /* No action occuring at this minute */
             matchState = " ";
-        } 
+        }
     }
 
     public void startHalf(int half) {
         if (half == 1) {
             /* First half */
-            
+
             /* Only print detailed match events if the match is not quick ran */
             if (!quickRun) {
                 print("\n===== " + homeTeam.getName() + " vs. " + awayTeam.getName());
@@ -537,7 +584,8 @@ public class MatchEngine {
             while (clock < (45 + fhST)) {
                 clock++;
                 matchProgress();
-            };
+            }
+            ;
 
             /* End of first half */
             clock = 45;
@@ -554,9 +602,9 @@ public class MatchEngine {
             if (!quickRun) {
                 System.out.println("\n----- Starting second-half...\n");
             }
-            
+
             int shST = RNG.nextInt(6);
-            
+
             matchState = " ";
             while (clock < (90 + shST)) {
                 clock++;
@@ -581,7 +629,8 @@ public class MatchEngine {
     }
 
     public void printMatchStatistics() {
-        print("-- Possession: " + homeTeam.getAbbreviation() + " " + (int) homePossession + "% - " + (int) awayPossession + "% " + awayTeam.getAbbreviation());
+        print("-- Possession: " + homeTeam.getAbbreviation() + " " + (int) homePossession + "% - "
+                + (int) awayPossession + "% " + awayTeam.getAbbreviation());
         print("-- " + homeTeam.getAbbreviation() + " attempts: " + HAttempts);
         print("-- " + awayTeam.getAbbreviation() + " attempts: " + AAttempts);
     }
@@ -597,7 +646,7 @@ public class MatchEngine {
 
         homeTeam = match.getHomeTeam();
         awayTeam = match.getAwayTeam();
-        
+
         /*-- Retrieve initial ratings for teams --*/
         homeAttack = homeTeam.getAttackRating();
         homeMidfield = homeTeam.getMidfieldRating();
@@ -617,17 +666,17 @@ public class MatchEngine {
         if (homeOVR > awayOVR) {
             homeOVR = (int) Math.floor(homeOVR + (15 * (awayOVR / homeOVR)));
             /* Clamp home overall boost advantage */
-            homeOVR = this.clampV(homeOVR, 0, 95);
+            homeOVR = this.clamp(homeOVR, 0, 95);
 
             awayOVR = (int) Math.floor(awayOVR - (15 * (awayOVR / homeOVR)));
-            awayOVR = this.clampV(awayOVR, 0, 95);
+            awayOVR = this.clamp(awayOVR, 0, 95);
         } else if (awayOVR > homeOVR) {
             awayOVR = (int) Math.floor(homeOVR + (10 * (homeOVR / awayOVR)));
             /* Clamp away overall boost advantage */
-            awayOVR = this.clampV(homeOVR, 0, 95);
+            awayOVR = this.clamp(homeOVR, 0, 95);
 
             homeOVR = (int) Math.floor(homeOVR - (10 * (homeOVR / awayOVR)));
-            homeOVR = this.clampV(awayOVR, 0, 95);
+            homeOVR = this.clamp(awayOVR, 0, 95);
         }
 
         /*-- Attack vs. opponent defence comparisons 
@@ -638,44 +687,44 @@ public class MatchEngine {
         if (homeAttack > awayDefence) {
             /* Home attack advantage */
             homeAttack = (int) Math.floor(homeAttack + (15 * (awayDefence / homeAttack)));
-            homeAttack = this.clampV(homeAttack, 0, 95);
+            homeAttack = this.clamp(homeAttack, 0, 95);
 
             awayDefence = (int) Math.floor(awayDefence - (15 * (awayDefence / homeAttack)));
-            awayDefence = this.clampV(awayDefence, 0, 95);
+            awayDefence = this.clamp(awayDefence, 0, 95);
         } else if (awayDefence > homeAttack) {
             /* Away defence advantage */
             awayDefence = (int) Math.floor(awayDefence + (20 * (homeAttack / awayDefence)));
-            awayDefence = this.clampV(awayDefence, 0, 95);
+            awayDefence = this.clamp(awayDefence, 0, 95);
 
             homeAttack = (int) Math.floor(homeAttack - (10 * (homeAttack / awayDefence)));
-            homeAttack = this.clampV(homeAttack, 0, 95);
+            homeAttack = this.clamp(homeAttack, 0, 95);
         }
 
         if (awayAttack > homeDefence) {
             /* Away attack advantage */
             awayAttack = (int) Math.floor(awayAttack + (10 * (homeDefence / awayAttack)));
-            this.clampV(awayAttack, 0, 95);
+            awayAttack = this.clamp(awayAttack, 0, 95);
 
             homeDefence = (int) Math.floor(homeDefence - (10 * (homeDefence / awayAttack)));
-            homeDefence = this.clampV(homeDefence, 0, 95);
+            homeDefence = this.clamp(homeDefence, 0, 95);
         } else if (homeDefence > awayAttack) {
             /* Home defence advantage */
             homeDefence = (int) Math.floor(homeDefence + (25 * (awayAttack / homeDefence)));
-            homeDefence = this.clampV(homeDefence, 0, 95);
+            homeDefence = this.clamp(homeDefence, 0, 95);
 
             awayAttack = (int) Math.floor(awayAttack - (15 * (awayAttack / homeDefence)));
-            awayAttack = this.clampV(awayAttack, 0, 95);
+            awayAttack = this.clamp(awayAttack, 0, 95);
         }
 
         clock = 0;
         matchState = "Kick Off";
-        
+
         /* Begin first half */
         startHalf(1);
 
         /* Ask user to continue half if game is not quick-ran */
         if (!quickRun) {
-             System.out.println("\n(a) Begin second-half \n(b) Exit Match ");
+            System.out.println("\n(a) Begin second-half \n(b) Exit Match ");
             String continueGame = input.nextLine();
             switch (continueGame) {
                 case "a":
